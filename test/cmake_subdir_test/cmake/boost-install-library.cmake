@@ -142,6 +142,9 @@ function(boost_install_library name)
     set(install_component_name "boost")
     message(VERBOSE "boost-install-library(${name}): COMPONENT '${install_component_name}'")
 
+    # Quickfix for multible dependent components a la Boost
+    set(_PROJECT_NAME "${name}")
+
     # --------------------------------------------------
     # Install each target with all of its file sets
     # --------------------------------------------------
@@ -162,8 +165,9 @@ function(boost_install_library name)
             )
         endif()
         # XXX list(GET name_parts -1 component_name)
+        # TODO(CK) set(component_name "${_tgt}")
+        string(REPLACE "boost_" "" component_name "${_tgt}")
 
-        set(component_name "${_tgt}")
         set_target_properties("${_tgt}" PROPERTIES EXPORT_NAME "${component_name}")
         message(
             VERBOSE

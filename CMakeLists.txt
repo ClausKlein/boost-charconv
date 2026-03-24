@@ -37,7 +37,8 @@ if(BOOST_USE_MODULES)
   target_compile_definitions(boost_charconv PUBLIC BOOST_USE_MODULES)
 endif()
 
-target_include_directories(boost_charconv PUBLIC include)
+# XXX target_include_directories(boost_charconv PUBLIC include)
+target_include_directories(boost_charconv PRIVATE include)
 
 
 # find_library for quadmath does not always work so attempt

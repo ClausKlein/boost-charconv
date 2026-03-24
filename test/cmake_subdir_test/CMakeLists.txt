@@ -37,14 +37,16 @@ foreach(dep IN LISTS deps)
 endforeach()
 
 include(cmake/boost-install-library.cmake)
-boost_install_library(boost_core TARGETS boost_core)
 boost_install_library(boost_config TARGETS boost_config)
-boost_install_library(boost_assert TARGETS boost_assert)
-boost_install_library(boost_throw_exception TARGETS boost_throw_exception DEPENDENCIES Boost::assert)
-boost_install_library(boost_charconv TARGETS boost_charconv DEPENDENCIES Boost::assert Boost::core Boost::config Boost::throw_exception)
+boost_install_library(boost_assert TARGETS boost_assert DEPENDENCIES "boost_config ${PROJECT_VERSION}")
+boost_install_library(boost_throw_exception TARGETS boost_throw_exception DEPENDENCIES "boost_assert ${PROJECT_VERSION}")
+boost_install_library(boost_core TARGETS boost_core DEPENDENCIES "boost_throw_exception ${PROJECT_VERSION}")
+boost_install_library(boost_charconv TARGETS boost_charconv DEPENDENCIES "boost_assert ${PROJECT_VERSION}"
+    "boost_core ${PROJECT_VERSION}" "boost_config ${PROJECT_VERSION}" "boost_throw_exception ${PROJECT_VERSION}"
+)
 
 add_executable(quick ../quick.cpp)
-target_link_libraries(quick Boost::charconv)
+target_link_libraries(quick PRIVATE Boost::charconv)
 
 enable_testing()
 add_test(quick quick)

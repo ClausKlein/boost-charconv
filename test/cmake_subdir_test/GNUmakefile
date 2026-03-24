@@ -36,7 +36,7 @@ else ifeq (${hostSystemName},Linux)
   export CXX:=clang++-23
 endif
 
-.PHONY: all install distclean format demo
+.PHONY: all install find_test distclean format demo
 
 all: build/compile_commands.json
 	ln -sf $< .
@@ -59,6 +59,19 @@ build/compile_commands.json: CMakeLists.txt GNUmakefile
 
 install: build/cmake_install.cmake
 	cmake --install build
+
+find_test: build/find_test
+	ninja -C $<
+	ninja -C $< check
+
+build/find_test: ../cmake_install_test/CMakeLists.txt
+	/usr/local/bin/cmake -S ../cmake_install_test -B build/find_test -G Ninja \
+	 -D CMAKE_EXPERIMENTAL_CXX_IMPORT_STD="451f2fe2-a8a2-47c3-bc32-94786d8fc91b" \
+	 -D CMAKE_CXX_STDLIB_MODULES_JSON=${CMAKE_CXX_STDLIB_MODULES_JSON} \
+	 -D CMAKE_CXX_STANDARD=23 -D CMAKE_CXX_EXTENSIONS=YES -D CMAKE_CXX_STANDARD_REQUIRED=YES \
+	 -D CMAKE_CXX_MODULE_STD=YES \
+	 -D CMAKE_BUILD_TYPE=Release \
+	 --log-level=VERBOSE --fresh \
 
 distclean: # XXX clean
 	rm -rf build stagedir compile_commands.json
