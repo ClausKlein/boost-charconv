@@ -3,13 +3,13 @@
 # Distributed under the Boost Software License, Version 1.0.
 # https://www.boost.org/LICENSE_1_0.txt
 
-cmake_minimum_required(VERSION 3.8...3.31)
+cmake_minimum_required(VERSION 3.8...4.3)
 
 project(boost_charconv VERSION "${BOOST_SUPERPROJECT_VERSION}" LANGUAGES CXX)
 
 # We can't make source files conditionally module units.
 # In module builds, use cc files that include their respective cpp, plus the module infrastructure
-if (BOOST_USE_MODULES)
+if(BOOST_USE_MODULES)
   set(SOURCE_SUFFIX "cc")
 else()
   set(SOURCE_SUFFIX "cpp")
@@ -22,7 +22,7 @@ add_library(boost_charconv
 
 add_library(Boost::charconv ALIAS boost_charconv)
 
-if (BOOST_USE_MODULES)
+if(BOOST_USE_MODULES)
   target_sources(boost_charconv
     PUBLIC FILE_SET CXX_MODULES BASE_DIRS modules FILES
       modules/boost_charconv.cppm
@@ -63,7 +63,9 @@ else()
   target_link_libraries(boost_charconv PUBLIC quadmath)
 endif()
 
-target_compile_features(boost_charconv PUBLIC cxx_std_11)
+if(NOT BOOST_USE_MODULES)
+  target_compile_features(boost_charconv PUBLIC cxx_std_11)
+endif()
 
 target_compile_definitions(boost_charconv
   PUBLIC BOOST_CHARCONV_NO_LIB
@@ -77,7 +79,7 @@ else()
 endif()
 
 if(BUILD_TESTING AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/test/CMakeLists.txt")
-  
+
   add_subdirectory(test)
 
 endif()
