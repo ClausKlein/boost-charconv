@@ -37,10 +37,6 @@ if(BOOST_USE_MODULES)
   target_compile_definitions(boost_charconv PUBLIC BOOST_USE_MODULES)
 endif()
 
-# XXX target_include_directories(boost_charconv PUBLIC include)
-target_include_directories(boost_charconv PRIVATE include)
-
-
 # find_library for quadmath does not always work so attempt
 # to compile the trivial test case we use with B2
 include(CheckCXXSourceCompiles)
@@ -64,8 +60,60 @@ else()
   target_link_libraries(boost_charconv PUBLIC quadmath)
 endif()
 
+# -----------------------------------------------------------------------------
+# Include headers
+# -----------------------------------------------------------------------------
 if(NOT BOOST_USE_MODULES)
   target_compile_features(boost_charconv PUBLIC cxx_std_11)
+  target_include_directories(boost_charconv PUBLIC include)
+else()
+  target_sources(
+    boost_charconv
+    PUBLIC
+      FILE_SET headers_public
+        TYPE HEADERS
+        BASE_DIRS include
+        FILES
+          include/boost/charconv.hpp
+          include/boost/charconv/chars_format.hpp
+          include/boost/charconv/config.hpp
+          include/boost/charconv/detail/apply_sign.hpp
+          include/boost/charconv/detail/bit_layouts.hpp
+          include/boost/charconv/detail/buffer_sizing.hpp
+          include/boost/charconv/detail/compute_float32.hpp
+          include/boost/charconv/detail/compute_float64.hpp
+          include/boost/charconv/detail/compute_float80.hpp
+          include/boost/charconv/detail/config.hpp
+          include/boost/charconv/detail/dragonbox/dragonbox.hpp
+          include/boost/charconv/detail/dragonbox/dragonbox_common.hpp
+          include/boost/charconv/detail/dragonbox/floff.hpp
+          include/boost/charconv/detail/emulated128.hpp
+          include/boost/charconv/detail/fallback_routines.hpp
+          include/boost/charconv/detail/fast_float/ascii_number.hpp
+          include/boost/charconv/detail/fast_float/bigint.hpp
+          include/boost/charconv/detail/fast_float/constexpr_feature_detect.hpp
+          include/boost/charconv/detail/fast_float/decimal_to_binary.hpp
+          include/boost/charconv/detail/fast_float/digit_comparison.hpp
+          include/boost/charconv/detail/fast_float/fast_float.hpp
+          include/boost/charconv/detail/fast_float/fast_table.hpp
+          include/boost/charconv/detail/fast_float/float_common.hpp
+          include/boost/charconv/detail/fast_float/parse_number.hpp
+          include/boost/charconv/detail/from_chars_integer_impl.hpp
+          include/boost/charconv/detail/from_chars_result.hpp
+          include/boost/charconv/detail/integer_search_trees.hpp
+          include/boost/charconv/detail/issignaling.hpp
+          include/boost/charconv/detail/memcpy.hpp
+          include/boost/charconv/detail/parser.hpp
+          include/boost/charconv/detail/ryu/generic_128.hpp
+          include/boost/charconv/detail/ryu/ryu_generic_128.hpp
+          include/boost/charconv/detail/significand_tables.hpp
+          include/boost/charconv/detail/to_chars_integer_impl.hpp
+          include/boost/charconv/detail/to_chars_result.hpp
+          include/boost/charconv/detail/type_traits.hpp
+          include/boost/charconv/from_chars.hpp
+          include/boost/charconv/limits.hpp
+          include/boost/charconv/to_chars.hpp
+  )
 endif()
 
 target_compile_definitions(boost_charconv
