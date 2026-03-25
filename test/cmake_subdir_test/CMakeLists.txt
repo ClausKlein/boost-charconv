@@ -30,6 +30,9 @@ set(deps
     core
     # Secondary dependencies
     throw_exception
+    # only for module install test (CK)
+    type_traits
+    optional
 )
 
 foreach(dep IN LISTS deps)
@@ -43,6 +46,11 @@ boost_install_library(boost_throw_exception TARGETS boost_throw_exception DEPEND
 boost_install_library(boost_core TARGETS boost_core DEPENDENCIES "boost_throw_exception ${PROJECT_VERSION}")
 boost_install_library(boost_charconv TARGETS boost_charconv DEPENDENCIES "boost_assert ${PROJECT_VERSION}"
     "boost_core ${PROJECT_VERSION}" "boost_config ${PROJECT_VERSION}" "boost_throw_exception ${PROJECT_VERSION}"
+)
+# only for module install test (CK)
+boost_install_library(boost_type_traits TARGETS boost_type_traits DEPENDENCIES "boost_config ${PROJECT_VERSION}")
+boost_install_library(boost_optional TARGETS boost_optional DEPENDENCIES "boost_type_traits ${PROJECT_VERSION}"
+    "boost_assert ${PROJECT_VERSION}" "boost_core ${PROJECT_VERSION}" "boost_throw_exception ${PROJECT_VERSION}"
 )
 
 add_executable(quick ../quick.cpp)

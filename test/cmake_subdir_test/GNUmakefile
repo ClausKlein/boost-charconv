@@ -31,12 +31,12 @@ ifeq (${hostSystemName},Darwin)
   # export CXX:=g++-15
   # export GCOV="gcov"
 else ifeq (${hostSystemName},Linux)
-	export LLVM_DIR:=/usr/lib/llvm-23
+  export LLVM_DIR:=/usr/lib/llvm-23
   export PATH:=${LLVM_DIR}/bin:${PATH}
   export CXX:=clang++-23
 endif
 
-.PHONY: all install find_test distclean format demo
+.PHONY: all install find_test distclean format
 
 all: build/compile_commands.json
 	ln -sf $< .
