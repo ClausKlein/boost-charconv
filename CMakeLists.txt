@@ -66,7 +66,10 @@ endif()
 if(NOT BOOST_USE_MODULES)
   target_compile_features(boost_charconv PUBLIC cxx_std_11)
   target_include_directories(boost_charconv PUBLIC include)
-else()
+endif()
+
+# Note: usable starting with cmake v3.23
+if(NOT CMAKE_VERSION VERSION_LESS 3.23)
   target_sources(
     boost_charconv
     PUBLIC

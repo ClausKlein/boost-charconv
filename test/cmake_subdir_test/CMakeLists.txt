@@ -21,6 +21,19 @@ cmake_minimum_required(VERSION 3.21...4.3)
 
 project(cmake_subdir_test LANGUAGES CXX VERSION 1.90.0)
 
+#======================================================================
+# Check if import std; is available for the current toolchain
+#======================================================================
+if(${CMAKE_CXX_STANDARD} IN_LIST CMAKE_CXX_COMPILER_IMPORT_STD)
+    set(CMAKE_CXX_MODULE_STD 1)
+    message(STATUS "Using `import std;`")
+else()
+    message(WARNING "`import std;` is not available for C++${CMAKE_CXX_STANDARD}")
+    set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
+    set(CMAKE_CXX_MODULE_STD OFF)
+    set(BOOST_USE_MODULES OFF)
+endif()
+
 add_subdirectory(../.. boostorg/charconv)
 
 set(deps
