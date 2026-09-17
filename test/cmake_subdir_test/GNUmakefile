@@ -38,13 +38,13 @@ ifeq (${hostSystemName},Darwin)
     # XXX export GCOV:="llvm-cov gcov"
   endif
 
-  ### NOTE: to test g++-15:
-  ifeq (${CXX},g++-15)
+  ### NOTE: to test g++-16:
+  ifeq (${CXX},g++-16)
     export GCC_PREFIX:=$(shell brew --prefix gcc)
     export GCC_DIR:=$(shell realpath ${GCC_PREFIX})
     export CMAKE_CXX_STDLIB_MODULES_JSON:=${GCC_DIR}/lib/gcc/current/libstdc++.modules.json
     export CXXFLAGS:=-stdlib=libstdc++
-    # XXX export CXX:=g++-15
+    # XXX export CXX:=g++-16
     # XXX export GCOV:="gcov"
   endif
 
@@ -74,12 +74,12 @@ build/compile_commands.json: CMakeLists.txt GNUmakefile
 	 -D CMAKE_CXX_STANDARD=23 -D CMAKE_CXX_EXTENSIONS=YES -D CMAKE_CXX_STANDARD_REQUIRED=YES \
 	 -D CMAKE_CXX_MODULE_STD=YES \
 	 -D BOOST_USE_MODULES=YES \
-	 -D BOOST_CHARCONV_NO_QUADMATH=NO \
 	 -D BUILD_TESTING=YES \
 	 -D CMAKE_BUILD_TYPE=Release \
 	 -D CMAKE_INSTALL_MESSAGE=LAZY \
 	 -D CMAKE_SKIP_INSTALL_RULES=NO \
-	 --log-level=VERBOSE --fresh \
+	 -D BOOST_ASSERT_INSTALL_CONFIG_FILE_PACKAGE=ON \
+	 --log-level=VERBOSE #XXX --fresh \
 	 # --trace-expand --trace-source=use-fetch-content.cmake \
 	 # --debug-find-pkg=GTest
 
@@ -92,7 +92,6 @@ find_test: build/find_test
 
 build/find_test: ../cmake_install_test/CMakeLists.txt
 	cmake -S ../cmake_install_test -B build/find_test -G Ninja \
-	 -D CMAKE_EXPERIMENTAL_CXX_IMPORT_STD="451f2fe2-a8a2-47c3-bc32-94786d8fc91b" \
 	 -D CMAKE_CXX_STDLIB_MODULES_JSON=${CMAKE_CXX_STDLIB_MODULES_JSON} \
 	 -D CMAKE_CXX_STANDARD=23 -D CMAKE_CXX_EXTENSIONS=YES -D CMAKE_CXX_STANDARD_REQUIRED=YES \
 	 -D CMAKE_CXX_MODULE_STD=YES \
